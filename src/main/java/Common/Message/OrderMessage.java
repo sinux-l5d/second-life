@@ -1,24 +1,11 @@
 package Common.Message;
 
+import Common.Side;
+
 public class OrderMessage extends Message {
     private final Side side;
     private final String title;
     private final double price;
-
-    public enum Side {
-        BUY("B"),
-        SELL("S");
-
-        private final String side;
-
-        Side(String side) {
-            this.side = side;
-        }
-
-        public String toString() {
-            return side;
-        }
-    }
 
     public OrderMessage(Side side, String title, double price) {
         super(MessageType.ORDER);

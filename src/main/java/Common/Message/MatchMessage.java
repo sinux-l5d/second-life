@@ -1,12 +1,14 @@
 package Common.Message;
 
+import Common.Side;
+
 public class MatchMessage extends Message {
-    private final OrderMessage.Side side;
+    private final Side side;
     private final String title;
     private final double price;
     private final String counterparty;
 
-    public MatchMessage(OrderMessage.Side side, String title, double price, String counterparty) {
+    public MatchMessage(Side side, String title, double price, String counterparty) {
         super(MessageType.MATCH);
         this.side = side;
         this.title = title;
@@ -14,7 +16,7 @@ public class MatchMessage extends Message {
         this.counterparty = counterparty;
     }
 
-    public OrderMessage.Side getSide() {
+    public Side getSide() {
         return side;
     }
 

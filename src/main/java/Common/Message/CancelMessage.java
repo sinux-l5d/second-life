@@ -1,18 +1,20 @@
 package Common.Message;
 
+import Common.Side;
+
 public class CancelMessage extends Message {
-    private final OrderMessage.Side side;
+    private final Side side;
     private final String title;
     private final double price;
 
-    public CancelMessage(OrderMessage.Side side, String title, double price) {
+    public CancelMessage(Side side, String title, double price) {
         super(MessageType.CANCEL);
         this.side = side;
         this.title = title;
         this.price = price;
     }
 
-    public OrderMessage.Side getSide() {
+    public Side getSide() {
         return side;
     }
 
