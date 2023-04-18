@@ -12,17 +12,12 @@ public class CommandFactory {
                 OrderMessage orderMessage = (OrderMessage) msg;
                 yield new OrderCommand(connectionHandler.getUsername(), orderMessage.getSide(), orderMessage.getTitle(), orderMessage.getPrice(), ob, server);
             }
-
-/*
-            case CANCEL:
-                return new
-*/
+            case CANCEL -> {
+                CancelMessage cm = (CancelMessage) msg;
+                yield new CancelCommand(connectionHandler.getUsername(), cm.getSide(), cm.getTitle(), cm.getPrice(), ob);
+            }
             case VIEW -> new ViewCommand(ob);
-/*
-            case END:
-                return new
-*/
-
+            case END -> new EndCommand(connectionHandler);
             case CONNECTED, MATCH, CANCELLED, NOT_FOUND, ENDED, RAW -> throw new NotARequestException(msg);
             default -> throw new IllegalArgumentException("Invalid message type: " + msg.getMessageType());
         };

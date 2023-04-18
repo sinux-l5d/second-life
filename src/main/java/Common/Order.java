@@ -48,4 +48,22 @@ public class Order {
         return side.toString() + "\t" + title + "\t" + price + "\t" + username;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (!(obj instanceof Order other)) return false;
+        return username.equals(other.username) && side == other.side && title.equals(other.title) && price == other.price;
+    }
+
+    @Override
+    public int hashCode() {
+        // dark magic to avoid colisions, use a prime number
+        int result;
+        long temp;
+        result = title != null ? title.hashCode() : 0;
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
 }

@@ -2,10 +2,7 @@ package Server;
 
 import Common.Message.Message;
 import Common.OrderBook;
-import Server.Command.Command;
-import Server.Command.NotARequestException;
-import Server.Command.UserCommand;
-import Server.Command.WrongParamsException;
+import Server.Command.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -77,7 +74,7 @@ public class ConnectionHandler implements Runnable {
                     continue;
                 }
 
-                if (!isConnected() && !(cmd instanceof UserCommand)) {
+                if (!isConnected() && !(cmd instanceof UserCommand || cmd instanceof EndCommand)) {
                     System.err.println("User must be connected to issue commands");
                     out.println("You must connect before issuing commands.");
                     continue;
