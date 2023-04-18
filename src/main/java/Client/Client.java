@@ -43,6 +43,8 @@ public class Client {
                     System.out.println(serverMessage);
                 }
             }
+            System.out.println("Server closed the connection");
+            System.exit(0);
         } catch (IOException e) {
             System.err.println("Error reading server message: " + e.getMessage());
         }
