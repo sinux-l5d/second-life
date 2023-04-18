@@ -2,7 +2,7 @@ package Common.Message;
 
 import Common.Side;
 
-public class CancelMessage extends Message {
+public class CancelMessage extends RequestMessage {
     private final Side side;
     private final String title;
     private final double price;

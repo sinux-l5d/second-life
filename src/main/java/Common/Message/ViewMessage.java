@@ -1,6 +1,6 @@
 package Common.Message;
 
-public class ViewMessage extends Message {
+public class ViewMessage extends RequestMessage {
     public ViewMessage() {
         super(MessageType.VIEW);
     }

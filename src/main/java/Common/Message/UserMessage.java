@@ -1,6 +1,6 @@
 package Common.Message;
 
-public class UserMessage extends Message {
+public class UserMessage extends RequestMessage {
     private final String username;
 
     public UserMessage(String username) {

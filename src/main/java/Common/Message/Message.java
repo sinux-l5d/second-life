@@ -1,5 +1,7 @@
 package Common.Message;
 
+import Common.Side;
+
 public abstract class Message {
     private final MessageType messageType;
 
@@ -18,13 +20,31 @@ public abstract class Message {
      * @param serialized The serialized string.
      * @return The message.
      */
-    public Message fromSerialized(String serialized) {
+    public static Message fromSerialized(String serialized) throws IllegalArgumentException {
         String[] parts = serialized.split(":");
         MessageType messageType = MessageType.valueOf(parts[0]);
         String[] params = parts[1].split(",");
         switch (messageType) {
             case USER:
                 return new UserMessage(params[0]);
+            case ORDER:
+                return new OrderMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]));
+            case CANCEL:
+                return new CancelMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]));
+            case VIEW:
+                return new ViewMessage();
+            case END:
+                return new EndMessage();
+            case CONNECTED:
+                return new ConnectedMessage();
+            case MATCH:
+                return new MatchMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]), params[3]);
+            case CANCELLED:
+                return new CancelledMessage();
+            case NOT_FOUND:
+                return new NotFoundMessage();
+            case ENDED:
+                return new EndedMessage();
             default:
                 throw new IllegalArgumentException("Invalid message type: " + messageType);
         }
@@ -35,6 +55,7 @@ public abstract class Message {
     }
 
     public enum MessageType {
+        RAW, // Response only
         USER,
         ORDER,
         CANCEL,

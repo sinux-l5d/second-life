@@ -2,7 +2,7 @@ package Common.Message;
 
 import Common.Side;
 
-public class OrderMessage extends Message {
+public class OrderMessage extends RequestMessage {
     private final Side side;
     private final String title;
     private final double price;

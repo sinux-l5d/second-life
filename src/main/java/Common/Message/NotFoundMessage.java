@@ -1,6 +1,6 @@
 package Common.Message;
 
-public class NotFoundMessage extends Message {
+public class NotFoundMessage extends ResponseMessage {
     public NotFoundMessage() {
         super(MessageType.NOT_FOUND);
     }

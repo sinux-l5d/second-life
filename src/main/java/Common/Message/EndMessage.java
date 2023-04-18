@@ -1,6 +1,6 @@
 package Common.Message;
 
-public class EndMessage extends Message {
+public class EndMessage extends RequestMessage {
     public EndMessage() {
         super(MessageType.END);
     }

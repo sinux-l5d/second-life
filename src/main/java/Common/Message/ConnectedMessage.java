@@ -1,6 +1,6 @@
 package Common.Message;
 
-public class ConnectedMessage extends Message {
+public class ConnectedMessage extends ResponseMessage {
 
     public ConnectedMessage() {
         super(MessageType.CONNECTED);

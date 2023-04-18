@@ -1,6 +1,6 @@
 package Common.Message;
 
-public class CancelledMessage extends Message {
+public class CancelledMessage extends ResponseMessage {
     public CancelledMessage() {
         super(MessageType.CANCELLED);
     }
