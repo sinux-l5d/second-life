@@ -27,16 +27,36 @@ public class OrderBook {
         return orders.remove(order);
     }
 
-    public List<Order> getBuyOrders(String title) {
+    /**
+     * Returns a list of orders that are compatible with the given order
+     */
+    public List<Order> matchingOrders(Order order) {
+        // sideWanted is the opposite of the side of the order that is being matched
+        Side sideWanted = order.getSide() == Side.BUY ? Side.SELL : Side.BUY;
+
+
         return orders.stream()
-                .filter(order -> order.getSide() == Side.BUY && order.getTitle().equals(title))
+                .filter(o -> o.getSide() == sideWanted && o.getTitle().equals(order.getTitle()))
+                .filter(o -> priceCompatible(o.getPrice(), order.getPrice()))
                 .toList();
     }
 
-    public List<Order> getSellOrders(String title) {
-        return orders.stream()
-                .filter(order -> order.getSide() == Side.SELL && order.getTitle().equals(title))
-                .toList();
+    /**
+     * Returns the first order that is compatible with the given order, and removes it from the order book
+     */
+    public Order matchOrder(Order order) {
+        List<Order> matchingOrders = matchingOrders(order);
+        if (matchingOrders.isEmpty()) {
+            return null;
+        } else {
+            Order match = matchingOrders.get(0);
+            orders.remove(match);
+            return match;
+        }
+    }
+
+    private boolean priceCompatible (double price1, double price2) {
+        return Math.abs(price1 - price2) <= 5;
     }
 
     public List<Order> getAllOrders() {

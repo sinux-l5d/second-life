@@ -5,12 +5,15 @@ import Common.OrderBook;
 import Server.Command.*;
 
 public class CommandFactory {
-    public static Command fromMessage(Message msg, OrderBook ob, ConnectionHandler connectionHandler) throws NotARequestException, IllegalArgumentException {
+    public static Command fromMessage(Message msg, OrderBook ob, ConnectionHandler connectionHandler, Server server) throws NotARequestException, IllegalArgumentException {
         return switch (msg.getMessageType()) {
             case USER -> new UserCommand(((UserMessage) msg).getUsername(), connectionHandler);
+            case ORDER -> {
+                OrderMessage orderMessage = (OrderMessage) msg;
+                yield new OrderCommand(connectionHandler.getUsername(), orderMessage.getSide(), orderMessage.getTitle(), orderMessage.getPrice(), ob, server);
+            }
+
 /*
-            case ORDER:
-                return new OrderCommand(((OrderMessage) msg).getSide(), ((OrderMessage) msg).getSymbol(), ((OrderMessage) msg).getQuantity(), ob);
             case CANCEL:
                 return new
 */
