@@ -24,7 +24,7 @@ public abstract class Message {
      * @return The message.
      */
     public static Message fromSerialized(String serialized) throws IllegalArgumentException, WrongParamsException {
-        String[] parts = serialized.split(":");
+        String[] parts = serialized.split(":", 2);
         MessageType messageType = MessageType.valueOf(parts[0]);
         String[] params = new String[0];
         if (parts.length > 1) {
@@ -37,11 +37,11 @@ public abstract class Message {
             }
             case ORDER -> {
                 checkParams(params, 3);
-                return new OrderMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]));
+                return new OrderMessage(Side.fromString(params[0]), params[1], Double.parseDouble(params[2]));
             }
             case CANCEL -> {
                 checkParams(params, 3);
-                return new CancelMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]));
+                return new CancelMessage(Side.fromString(params[0]), params[1], Double.parseDouble(params[2]));
             }
             case VIEW -> {
                 checkParams(params, 0);
@@ -57,7 +57,7 @@ public abstract class Message {
             }
             case MATCH -> {
                 checkParams(params, 4);
-                return new MatchMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]), params[3]);
+                return new MatchMessage(Side.fromString(params[0]), params[1], Double.parseDouble(params[2]), params[3]);
             }
             case CANCELLED -> {
                 checkParams(params, 0);

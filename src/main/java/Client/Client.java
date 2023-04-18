@@ -8,11 +8,14 @@ import java.net.Socket;
 
 public class Client {
     private static final String PROMPT = ">>> ";
+    public static final String END_OF_RESPONSE_MARKER = "<EOR>";
+
+    private final Socket socket;
     private final BufferedReader in;
     private final PrintWriter out;
 
     public Client(String host, int port) throws IOException {
-        Socket socket = new Socket(host, port);
+        this.socket = new Socket(host, port);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream(), true);
     }
@@ -34,11 +37,22 @@ public class Client {
         String serverMessage;
         try {
             while ((serverMessage = in.readLine()) != null) {
-                System.out.println(serverMessage);
-                System.out.print(PROMPT);
+                if (serverMessage.equals(END_OF_RESPONSE_MARKER)) {
+                    System.out.print(PROMPT);
+                } else {
+                    System.out.println(serverMessage);
+                }
             }
         } catch (IOException e) {
             System.err.println("Error reading server message: " + e.getMessage());
+        }
+    }
+
+    public void shutdown() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            System.err.println("Error closing socket: " + e.getMessage());
         }
     }
 
@@ -48,6 +62,11 @@ public class Client {
 
         try {
             Client client = new Client(host, port);
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                client.shutdown();
+                client.out.println("quit");
+            }));
             client.start();
         } catch (IOException e) {
             System.err.println("Error connecting to the server: " + e.getMessage());

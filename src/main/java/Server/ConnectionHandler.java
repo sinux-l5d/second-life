@@ -14,15 +14,23 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ConnectionHandler implements Runnable {
+    public static final String END_OF_RESPONSE_MARKER = "<EOR>";
+
     private final Socket clientSocket;
+    private final Server server;
+    private PrintWriter out;
     private String username;
 
-    public ConnectionHandler(Socket clientSocket) {
+    public ConnectionHandler(Socket clientSocket, Server server) {
         this.clientSocket = clientSocket;
+        this.server = server;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    public String getUsername() {
+        return username;
     }
 
     public boolean isConnected() {
@@ -33,19 +41,19 @@ public class ConnectionHandler implements Runnable {
     public void run() {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
              PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+            this.out = out;
 
             out.println("Welcome to SecondLife!");
             String inputLine;
             do {
+                out.println(END_OF_RESPONSE_MARKER);
                 inputLine = in.readLine();
 
                 System.out.println("Received: " + inputLine);
 
                 Message msg;
                 try {
-                    System.out.println("Deserializing message: " + inputLine.trim());
                     msg = Message.fromSerialized(inputLine.trim());
-                    System.out.println("done");
                 } catch (WrongParamsException e) {
                     System.err.println("Wrong parameters: " + e.getMessage());
                     out.println(e.getMessage());
@@ -55,10 +63,10 @@ public class ConnectionHandler implements Runnable {
                     out.println("Invalid or unsupported message");
                     continue;
                 }
-                System.out.println("Message type: " + msg.getClass().getSimpleName());
+
                 Command cmd;
                 try {
-                    cmd = CommandFactory.fromMessage(msg, OrderBook.getInstance(), this);
+                    cmd = CommandFactory.fromMessage(msg, OrderBook.getInstance(), this, server);
                 } catch (NotARequestException e) {
                     System.err.println("Invalid request: " + e.getMessage());
                     out.println("Invalid or unsupported command");
@@ -68,8 +76,7 @@ public class ConnectionHandler implements Runnable {
                     out.println("Invalid or unsupported command");
                     continue;
                 }
-                System.out.println("Executing command: " + cmd.getClass().getSimpleName());
-                System.out.println("Is connected: " + isConnected());
+
                 if (!isConnected() && !(cmd instanceof UserCommand)) {
                     System.err.println("User must be connected to issue commands");
                     out.println("You must connect before issuing commands.");
@@ -77,16 +84,24 @@ public class ConnectionHandler implements Runnable {
                 }
 
                 out.println(cmd.execute().toString());
-
             } while (inputLine != null);
         } catch (IOException e) {
             System.err.println("Error handling client connection: " + e.getMessage());
         } finally {
-            try {
-                clientSocket.close();
-            } catch (IOException e) {
-                System.err.println("Error closing client socket: " + e.getMessage());
-            }
+            close();
         }
+    }
+
+    public void close() {
+        try {
+            clientSocket.close();
+            server.removeClient(this);
+        } catch (IOException e) {
+            System.err.println("Error closing client socket: " + e.getMessage());
+        }
+    }
+
+    public void send(Message msg) {
+        if (out != null) out.println(msg.toString());
     }
 }

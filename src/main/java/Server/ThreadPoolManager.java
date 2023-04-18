@@ -13,4 +13,8 @@ public class ThreadPoolManager {
     public void submitTask(Runnable task) {
         executorService.submit(task);
     }
+
+    public void shutdown() {
+        executorService.shutdown();
+    }
 }
