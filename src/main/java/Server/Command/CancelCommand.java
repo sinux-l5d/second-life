@@ -6,7 +6,6 @@ import Common.Message.NotFoundMessage;
 import Common.Order;
 import Common.OrderBook;
 import Common.Side;
-import Server.Server;
 
 public class CancelCommand implements Command {
     private final String username;
@@ -22,23 +21,6 @@ public class CancelCommand implements Command {
         this.price = price;
         this.orderBook = orderBook;
     }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public Side getSide() {
-        return side;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
 
     @Override
     public Message execute() {
