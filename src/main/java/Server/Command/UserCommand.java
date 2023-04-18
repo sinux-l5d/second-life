@@ -5,8 +5,8 @@ import Common.Message.Message;
 import Server.ConnectionHandler;
 
 public class UserCommand implements Command {
-    private String username;
-    private ConnectionHandler connectionHandler;
+    private final String username;
+    private final ConnectionHandler connectionHandler;
     public UserCommand(String username, ConnectionHandler connectionHandler) {
         this.username = username;
         this.connectionHandler = connectionHandler;

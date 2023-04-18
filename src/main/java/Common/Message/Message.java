@@ -31,38 +31,47 @@ public abstract class Message {
             params = parts[1].split(",");
         }
         switch (messageType) {
-            case USER:
+            case USER -> {
                 checkParams(params, 1);
                 return new UserMessage(params[0]);
-            case ORDER:
+            }
+            case ORDER -> {
                 checkParams(params, 3);
                 return new OrderMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]));
-            case CANCEL:
+            }
+            case CANCEL -> {
                 checkParams(params, 3);
                 return new CancelMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]));
-            case VIEW:
+            }
+            case VIEW -> {
                 checkParams(params, 0);
                 return new ViewMessage();
-            case END:
+            }
+            case END -> {
                 checkParams(params, 0);
                 return new EndMessage();
-            case CONNECTED:
+            }
+            case CONNECTED -> {
                 checkParams(params, 0);
                 return new ConnectedMessage();
-            case MATCH:
+            }
+            case MATCH -> {
                 checkParams(params, 4);
                 return new MatchMessage(Side.valueOf(params[0]), params[1], Double.parseDouble(params[2]), params[3]);
-            case CANCELLED:
+            }
+            case CANCELLED -> {
                 checkParams(params, 0);
                 return new CancelledMessage();
-            case NOT_FOUND:
+            }
+            case NOT_FOUND -> {
                 checkParams(params, 0);
                 return new NotFoundMessage();
-            case ENDED:
+            }
+            case ENDED -> {
                 checkParams(params, 0);
                 return new EndedMessage();
-            default:
-                throw new IllegalArgumentException("Invalid message type: " + messageType);
+            }
+            default -> throw new IllegalArgumentException("Invalid message type: " + messageType);
         }
     }
 

@@ -5,7 +5,7 @@ import Common.Message.RawMessage;
 import Common.OrderBook;
 
 public class ViewCommand implements Command {
-    private OrderBook ob;
+    private final OrderBook ob;
     public ViewCommand(OrderBook ob) {
         this.ob = ob;
     }
